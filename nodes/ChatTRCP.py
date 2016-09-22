@@ -118,6 +118,9 @@ class ChatTRCP(object):
         self.nowmode = "CHAT"
         rospy.spin()
 
+
+
+
     """ DoCoMo 雑談対話の実行 """
     def execChat(self, message):
         # Rospeexを使うと、文字列の最後に「。」が付くので削除する

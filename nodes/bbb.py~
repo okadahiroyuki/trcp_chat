@@ -1,0 +1,16 @@
+import rospy
+from rospeex_if import ROSpeexInterface
+ 
+def sr_response(msg):
+    print msg
+ 
+def main():
+    rospy.init_node('demo')
+    interface = ROSpeexInterface()
+    interface.init()
+    interface.set_sr_response()
+    interface.set_spi_config(language='ja', engine='google')
+    rospy.spin()
+ 
+if __name__ == '__main__':
+    main()
