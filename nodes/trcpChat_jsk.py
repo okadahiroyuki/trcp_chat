@@ -4,12 +4,12 @@
 """
     Chat program
 
-    ROSPEEXから入力された文章を使い、DoCoMoAPIで会話する
+    jsk ROS Voice Recognition から入力された文章を使い、DoCoMoAPIで会話する
 
     The project is hosted on GitHub where your could fork the project or report
     issues. Visit https://github.com/roboworks/
 
-    :copyright: (c) 2015 by Hiroyuki Okada, All rights reserved.
+    :copyright: (c) 2016 by Hiroyuki Okada, All rights reserved.
     :license: MIT License (MIT), http://www.opensource.org/licenses/MIT
 """
 __author__ = 'Hiroyuki Okada'
@@ -26,10 +26,13 @@ import json
 import rospy
 from std_msgs.msg import String
 
+from jsk_gui_msgs.msg import VoiceMessage
+from jsk_gui_msgs.msg import Tablet
+
 from rospeex_if import ROSpeexInterface
 
-from okada.srv import *
-from okada.msg import *
+from trcp_chat.srv import *
+from trcp_chat.msg import *
 
 
 _chat_={
@@ -64,14 +67,16 @@ class ChatTRCP(object):
         self.rospeex = ROSpeexInterface()
         self.rospeex.init()
         self.rospeex.register_sr_response( self.sr_response )
-        self.rospeex.set_spi_config(language='ja', engine='nict')
 
         """日本語（英語もある）でNICT(Googleもある)"""
         """launchファイ決めてもいいけど、動的に変更する？"""
         """とりあえず、現状は決め打ち"""
         self.lang = 'ja'
-        self.input_engine = 'nict'        
-        self.rospeex.set_spi_config(language='ja',engine='nict')
+#        self.input_engine = 'nict'        
+        self.input_engine = 'google'        
+        self.rospeex.set_spi_config(language='ja',engine='google')
+#        self.rospeex.set_spi_config(language=self.lang, engine=self.input_engine)
+
 
         """ 発話理解APIの準備 """
         self.req = DoCoMoUnderstandingReq()
@@ -117,6 +122,9 @@ class ChatTRCP(object):
         
         self.nowmode = "CHAT"
         rospy.spin()
+
+
+
 
     """ DoCoMo 雑談対話の実行 """
     def execChat(self, message):
